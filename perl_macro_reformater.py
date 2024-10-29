@@ -69,15 +69,14 @@ class PerlMacroReformater:
                 line = current_indentation * indent + line   
 
             fixed_file_lines_reversed.insert(0, line) # insert at the beginning
-            #^\[%.*?(IF|FOREACH).*?-%\]\n#
         
         # Simple syntax checker
         if if_foreach_count > end_count:
             print(f"WARNING: Missing [% END -%] closing IF/FOREACH statement detected in file {self.file_path}")
-            print(f"WARNING: Due to syntax errors indentation is fixed only partially in file {self.file_path}")
+            print(f"WARNING: Due to syntax errors indentation is fixed partially in file {self.file_path}")
         elif if_foreach_count < end_count:
             print(f"WARNING: Unnecessary [% END -%] detected in file {self.file_path}")
-            print(f"WARNING: Due to syntax errors indentation is fixed only partially in file {self.file_path}")
+            print(f"WARNING: Due to syntax errors indentation is fixed partially in file {self.file_path}")
         else:
             print(f"INFO: Fixed indentation in file {self.file_path}")
 
@@ -85,7 +84,7 @@ class PerlMacroReformater:
 
 
 if __name__ == '__main__':
-    file_path = '/nfs/site/disks/zsc11_avs_00049/porszuli/ace-master/tools/collage/assemble/templates/adhoc_connection.txt.siphdas'
-    # file_path = '/nfs/site/disks/zsc11_avs_00049/porszuli/ace-master/tools/collage/assemble/templates/par.txt.siphdas'
+    # file_path = '/nfs/site/disks/zsc11_avs_00049/porszuli/ace-master/tools/collage/assemble/templates/adhoc_connection.txt.siphdas'
+    file_path = '/nfs/site/disks/zsc11_avs_00049/porszuli/ace-master/tools/collage/assemble/templates/par.txt.siphdas'
     reformater = PerlMacroReformater(file_path)
     reformater.run_reformater()
