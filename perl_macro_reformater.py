@@ -58,17 +58,18 @@ class PerlMacroReformater:
                 line = current_indentation * indent + line 
                 current_indentation += 1
                 end_count += 1
+            elif re.search(r'\[%\s*?(ELSE|ELSIF.*?)\s*?-%\]', line):
+                line = (current_indentation - 1) * indent + line  
             elif re.search(r'\[%.*?(IF|FOREACH).*?-%\]', line):
                 if current_indentation > 0:
                     current_indentation -= 1
                 line = current_indentation * indent + line 
-                if_foreach_count += 1
-            elif re.search(r'\[%\s*?(ELSE|ELSIF)\s*?-%\]', line):
-                line = (current_indentation - 1) * indent + line                 
+                if_foreach_count += 1 
             else:
                 line = current_indentation * indent + line   
 
             fixed_file_lines_reversed.insert(0, line) # insert at the beginning
+            #^\[%.*?(IF|FOREACH).*?-%\]\n#
         
         # Simple syntax checker
         if if_foreach_count > end_count:
