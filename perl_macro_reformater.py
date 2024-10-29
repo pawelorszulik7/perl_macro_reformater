@@ -63,7 +63,7 @@ class PerlMacroReformater:
                     current_indentation -= 1
                 line = current_indentation * indent + line 
                 if_foreach_count += 1
-            elif re.search(r'\[%\s*?ELSE\s*?-%\]', line):
+            elif re.search(r'\[%\s*?(ELSE|ELSIF)\s*?-%\]', line):
                 line = (current_indentation - 1) * indent + line                 
             else:
                 line = current_indentation * indent + line   
