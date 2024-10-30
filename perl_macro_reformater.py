@@ -47,7 +47,6 @@ class PerlMacroReformater:
         file_lines_reversed = self.file_content[::-1]
         fixed_file_lines_reversed = []
         current_indentation = 0
-        indent = '    '
 
         # Simple syntax checker
         if_foreach_count = 0
@@ -55,18 +54,18 @@ class PerlMacroReformater:
 
         for line in file_lines_reversed:
             if re.search(r'\[%\s*?END\s*?-%\]', line):
-                line = current_indentation * indent + line 
+                line = self.insert_indentation(line, current_indentation) 
                 current_indentation += 1
                 end_count += 1
             elif re.search(r'\[%\s*?(ELSE|ELSIF.*?)\s*?-%\]', line):
-                line = (current_indentation - 1) * indent + line  
+                line = self.insert_indentation(line, current_indentation - 1) 
             elif re.search(r'\[%.*?(IF|FOREACH).*?-%\]', line):
                 if current_indentation > 0:
                     current_indentation -= 1
-                line = current_indentation * indent + line 
+                line = self.insert_indentation(line, current_indentation)
                 if_foreach_count += 1 
             else:
-                line = current_indentation * indent + line   
+                line = self.insert_indentation(line, current_indentation)
 
             fixed_file_lines_reversed.insert(0, line) # insert at the beginning
         
@@ -82,9 +81,12 @@ class PerlMacroReformater:
 
         return fixed_file_lines_reversed
 
+    def insert_indentation(self, line, current_indentation_index):
+        indent = '    '
+        return current_indentation_index * indent + line
 
 if __name__ == '__main__':
-    # file_path = '/nfs/site/disks/zsc11_avs_00049/porszuli/ace-master/tools/collage/assemble/templates/adhoc_connection.txt.siphdas'
-    file_path = '/nfs/site/disks/zsc11_avs_00049/porszuli/ace-master/tools/collage/assemble/templates/par.txt.siphdas'
+    file_path = '/nfs/site/disks/zsc11_avs_00049/porszuli/ace-master/tools/collage/assemble/templates/adhoc_connection.txt.siphdas'
+    # file_path = '/nfs/site/disks/zsc11_avs_00049/porszuli/ace-master/tools/collage/assemble/templates/par.txt.siphdas'
     reformater = PerlMacroReformater(file_path)
     reformater.run_reformater()
