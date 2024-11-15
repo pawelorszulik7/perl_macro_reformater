@@ -18,21 +18,21 @@ class PerlMacroReformater:
             print(f"Error: Can't read file {self.file_path}: {e}")
             return []
         
-    def save_file(self):
+    def save_file(self, name_suffix = '_reformated'):
         try:
-            fixed_file_path = self.file_path.with_stem(self.file_path.stem + '_reformated')
+            fixed_file_path = self.file_path.with_stem(self.file_path.stem + name_suffix)
             with open(fixed_file_path, 'w') as f:
                 f.write(''.join(self.file_content))
             print(f"INFO: Changes saved to file {fixed_file_path}")
         except Exception as e:
             print(f"Error: Can't save file {fixed_file_path}: {e}")
 
-    def run_reformater(self):
+    def run_reformater(self, name_suffix = '_reformated'):
         print("")
         print(49 * "=" + "Perl Macro Reformater" + 50 * "=")
         self.file_content = self.read_file()  
         self.file_content = self.fix_indentation()
-        self.save_file()
+        self.save_file(name_suffix)
         print(120 * "=")
          
     def fix_indentation(self):
@@ -86,7 +86,11 @@ class PerlMacroReformater:
         return current_indentation_index * indent + line
 
 if __name__ == '__main__':
-    file_path = '/nfs/site/disks/zsc11_avs_00049/porszuli/ace-master/tools/collage/assemble/templates/adhoc_connection.txt.siphdas'
+    templates_dir = '/nfs/site/disks/zsc11_avs_00049/porszuli/ace-dev/tools/collage/assemble/templates/'
+    files_in_dir = Path(templates_dir).rglob('*.siphdas')
+    # file_path = '/nfs/site/disks/zsc11_avs_00049/porszuli/ace-dev/tools/collage/assemble/templates/adhoc_connection.txt.siphdas'
     # file_path = '/nfs/site/disks/zsc11_avs_00049/porszuli/ace-master/tools/collage/assemble/templates/par.txt.siphdas'
-    reformater = PerlMacroReformater(file_path)
-    reformater.run_reformater()
+
+    for file_path in files_in_dir:
+        reformater = PerlMacroReformater(file_path)
+        reformater.run_reformater(name_suffix='')
